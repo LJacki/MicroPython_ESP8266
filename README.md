@@ -1,101 +1,164 @@
 # MicroPython_ESP8266
-一步一步，使用ESP8266来学习MicroPython.
 
-COM口的波特率可以通过资源管理器进行设置。
+之前写博客每篇文章基本是独立的，都是按照学习，记录，分享的逻辑。此次想通过有主题的系列文章，带来有稍有深度的分享。
 
-使用最新版的手册MicroPython V1.13，更新日期为 04 Dec 2020.
+本系列将使用MicroPython驱动ESP8266，借助贝壳物联接入天猫精灵，简易实现智能家居控制体验。
 
-使用之前，需要准备的硬件：
+## 开始之前要准备
 
-ESP8266模块；
+涉及到软件和硬件并不像以前那么复杂，只需稍许准备即可。
 
-MicroUSB的数据线（一定要确保可以传输数据，普通的给充电宝使用的可能只能供电）；
+### MicroPython
 
-一台已经安装Python3环境的Windows电脑；
+总觉得编程语言总是越学越难，如果刚上手就能够驱动硬件，初学即巅峰，岂不是美滋滋？
 
-需要的软件：
+那么MicroPython就比较容易上手，而且可以直观的操作UART，I2C，SPI，PWM，ADC等等外设。想一想初学80C51的时候逐个控制寄存器读写，再到初学STM32的时候使用固件库进行初始化，流程也是非常繁琐。现在ST官方都在推CubeMx，通过可视化的界面，完成底层与外设接口的配置，有效的减少了项目开发前期的工作量。现在都是在挤出时间来捣鼓些小玩意，那就要以最快的速度把东西搞出来，也算是降低了不少时间成本。
 
-MicroPython File Uploader.exe（基于串口烧录的MicroPython交互解释器）
+本系列默认读者已经掌握基本的Python编程能力。如果是初学者需要自行学习， [廖雪峰](https://www.liaoxuefeng.com/wiki/1016959663602400/)， [菜鸟教程](https://www.runoob.com/python3/python3-tutorial.html) 等Python 3教程都是容易上手的。本系列能够使用到的语法也非常简单，只要理解能力不差（只要笔者描述的够明白），也可以继续学习下去，有关语法的疑问可以遇到之后再通过互联网解答。
 
-最有效的参考资料：
+MicroPython的相关信息可以通过[MicroPython官网](http://www.micropython.org/) 了解到，不想看官网的可以参考下面谷歌翻译的简介：
 
-官网的参考手册
+> MicroPython是Python 3编程语言的一种精简而高效的实现，其中包括Python标准库的一小部分，并且经过优化可在微控制器和受限环境中运行。
+>
+> MicroPython pyboard是一种紧凑的电子电路板，可在裸机上运行MicroPython，从而为您提供了可用于控制各种电子项目的低级Python操作系统。
+>
+> MicroPython充满了高级功能，例如交互式提示，任意精度整数，闭包，列表理解，生成器，异常处理等。 但是它足够紧凑，可以在256 k的代码空间和16 k的RAM中运行。
+>
+> MicroPython的目标是与普通Python尽可能兼容，从而使您可以轻松地将代码从桌面传输到微控制器或嵌入式系统。
 
-默认已经有了这样的一个环境；
+一句话概括，可以使用Python驱动MCU。
 
-## 获取固件
+### ESP8266
 
-像电脑一样，首先需要获取一个叫做固件的东西，可以看成是电脑系统的编译文件，并且把它烧录在ESP82666上。当前最新版本为esp8266-20200911-v1.13.bin；下载地址：
+硬件的选择本质上是坑多和坑少的尝试，别问我为什么知道的。
 
-http://micropython.org/download/esp8266/
+大多数开发阶段，为了迅捷方便，可以买市场上已经成熟的模块。就像买电脑一样，买一台已经组装好的机器，而不是东市买内存，西市买主板，南市买显卡，北市买电源。
 
-注意要根据ESP8266Flash的大小进行选取；
+当然必须得是超高性价比的，要便宜还要能打的那种。在MicroPython官网提供了一些硬件模块，针对该网站学习量身定制的。可是价格也不太亲民，即使在某宝上，pyboard的套件也要大几十往上。
 
-## 部署固件
+而同样支持MicroPython的ESP8266模块，ESP32的模块就比较便宜，并且该有的功能都有，就是想要这种便宜又能打的。
 
-需要USB数据线，使用串口转换（板载上有CH340或者PL2102）；
+<img src="README.assets/ESP8266 Model Item.jpg" alt="信泰电子的ESP8266模块" style="zoom:50%;" />
 
-使用pip安装esptool
+此处不是广告，笔者某宝买的ESP8266串口wifi模块才12.6元一个还免运费（这TM比STM 32 C8T6 还便宜） [链接在这需要自取](https://item.taobao.com/item.htm?spm=a230r.1.14.6.44c3c5fej8bdIo&id=531755241333&ns=1&abbucket=6#detail) 。
 
-```bash
-pip install esptool
-```
+注意，此产品发货的时候，下方两排排针是不焊接的，需要到货之后自行焊接。嫌麻烦的同学可以询问店家是否可以提供焊接，或找有工具的同学帮忙，不焊接排针的情况下，板载上有一颗LED灯可以进行控制。
 
-将ESP8266插入电脑；
+ESP8266基于MicroPython可以提供的外设资源和驱动有：
 
-在任务管理器中找到COM，
+- Delay and timing
+- Timers
+- Pins and GPIO
+- UART(serial bus)
+- PWM(pulse width modulation)
+- ADC(analog to digital conversion)
+- Software SPI bus
+- Hardware SPI bus
+- I2C bus
+- Real time clock(RTC)
+- Deep-sleep mode
+- OneWire driver
+- NeoPixel driver
+- APA102 driver
+- DHT driver
 
-需要在esptool.py的目录下进行擦除和烧录；
+这些外设和驱动都非常有用，若能将这些功能悉数收入囊中，也是收获颇丰了。
 
-烧录：
+### 硬件准备
 
-```bash
-esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash --flash_size=detect 0 esp8266-20170108-v1.8.7.bin
-```
+#### MicroUSB数据线
 
-拒绝访问需要按一下RST；
+上述ESP8266模块烧录程序的方式是通过ESP82266板载的一组UART0 (GPIO1=TX, GPIO3=RX)，这组UART0在模块上连接了一个串口芯片 CH340 (也可能是其他的型号，电脑要安装对应型号的驱动)。因此需要MicroUSB的接口连接电脑USB，进行供电和数据传输。
 
-通过串口访问，UART0 (GPIO1=TX, GPIO3=RX)，这个在板子上有；
+![Interface](README.assets/Inteface.png)
 
-烧录好之后，处于WIFI access point（AP）状态，可以从WIFI中找到；
+所需要的MicroUSB数据线（就是以前很多人说的安卓接口）接口示意见下图：
 
-## 使用 REPL prompt
+![MciroUSB Wire](README.assets/MciroUSB Wire.png)
 
-有两种进入交互解释器的途径，一种是通过UART串口，一种是通过WIFI（这个我以前不知道）；
+#### 其他设备
 
-通过串口就是使用一些串口工具，使用WIFI就需要连接如同一个局域网下进行操作；
+有条件的同学，可以一同采购其他的外设。结合本系列后面的内容，会用到0.96inch的OLED屏幕，HC-SR501人体红外感应模块，DH11温湿度模块，SG90舵机等。
 
-http://micropython.org/webrepl/
+如果有其他驱动需求也可以酌情选择，有目的性驱动可以更好的督促学习。
 
-打印hello world；点灯；
+这些设备也都是在上面的店铺采购的，价格也比较便宜。根据ESP8266的资源来驱动这些硬件，对进行MicroPython的学习很有帮助。
 
-一些功能，ctrl a，ctrl e；输入历史，tab自动补全；
+### 软件准备
 
-续行和索引；
+#### 串口相关
 
-灯循环闪烁
+[CH340的串口驱动程序]()，用于USB连接电脑之后，电脑识别到设备。
 
-## 内部系统文件
+串口调试助手，用于使用Python REPL(交互式解释器，类似于CMD进入Python的交互界面)，使用终端显示器对程序进行仿真。
 
-文件操作
+此时需要可以进行输入的串口调试助手，像常用带写入的串口调试助手都可以，包括下面要用的MicroPython File Uploader 也可以，笔者习惯使用 [Tera Term]()。
 
-文件列表
+#### MicroPython File Uploader
 
-查看boot.py中有什么内容；
+这款软件用来读取或写入ESP8266模块中4M的Flash内的文件，比如内部的的boot.py和main.py等。
 
-## 网络
+区别于REPL，可以在Windows中完成程序的编辑，再通过USB线缆传输到Flash中，接着复位，就会运行编写的程序。
 
-STA和AP
+#### 最好有个编辑器
 
-以及后面的其他功能；
+编辑器要选自己习惯使用的，Notepad ++ 也好（这个得注意，Python对缩进要求严格，建议Tab一定要改成制表符），Sublime Text也好，Ultra Edit也好，怎么方便怎么来，笔者就使用个人熟悉的Atom。
+
+### 环境准备
+
+Windows端要自己安装Python 3，网上有很多教程，这里指路廖雪峰的Python教程之[安装Python](https://www.liaoxuefeng.com/wiki/1016959663602400/1016959856222624) ；注意哦，安装目录可以选在`Customize installation` 选项自己选择，建议默认安装在`C:\Python3` 。
+
+至此本系列的准备工作就做完了，接下来就可以开始真正的学习了。
+
+## 手把手开始点灯
+
+接着折腾，接着学。
+
+### ESP82266通用信息
+
+ESP8266是Espressif Systems推出的一种流行的，具有WiFi功能的片上系统（SoC）。相关的Datasheet可以在[这里下载]() 。
+
+MicroPython for ESP8266库（）应该叫方法）中的Pin number都是基于ESP8266的芯片，而不是ESP8266模块引出的引脚（意思就是不是那焊接的两排排针的序号）。
+
+为了后面使用方便，下里提供一些技术规格：
+
+- CPU频率：80 MHz，可以超频至160 MHz；
+- 总可用RAM：94KB（部分预留给系统）；
+- 外部FlashROM：存放程序和数据，通过SPI烧录FLash，当前模块挂在的胃4 MB；
+- GPIO：16 + 1（GPIOs 可复用为其他功能，包括外部FlashROM，UART，深睡唤醒等等）；
+- UART：一组收发UART（无硬件握手协议），一组只有TX的UART；
+- SPI：2组SPI接口（一组用于FlashROM）；
+- I2C：无外部I2C（在任何引脚上均可以实现）；
+- 编程：使用UART的BootROM引导程序。
+
+#### 内部资源限制
+
+ESP8266的片上资源非常有限（RAM），因此建议避免分配太多的容量给对象（list列表，dictionaries字典）。使用完文件系统，sockets等要注意及时关闭。
+
+关于ESP8266启动进程，Real-time clock，Sockets 和 WiFi buffer 溢出，SSL/TLS限制的信息，可参考[官方文档](http://docs.micropython.org/en/latest/esp8266/general.html) 次出不再讲述。
+
+### 开始使用MicroPython
+
+获取串口
+
+获取固件
+
+烧录固件
+
+### 使用REPL prompt点灯
+
+使用REPL
+
+点灯，循环
 
 
 
+## 常用外设的驱动
 
 
 
+## 驱动0.96 Inch OLED
 
 
 
-
-
+## 接入贝壳物联
