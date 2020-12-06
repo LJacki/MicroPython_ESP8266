@@ -38,7 +38,7 @@ MicroPython的相关信息可以通过[MicroPython官网](http://www.micropython
 
 而同样支持MicroPython的ESP8266模块，ESP32的模块就比较便宜，并且该有的功能都有，就是想要这种便宜又能打的。
 
-<img src="README.assets/ESP8266 Model Item.jpg" alt="信泰电子的ESP8266模块" style="zoom:50%;" />
+<img src="README.assets/ESP8266 Model  Item.jpg" alt="ESP8266 Model  Item" style="zoom:50%;" />
 
 此处不是广告，笔者某宝买的ESP8266串口wifi模块才12.6元一个还免运费（这TM比STM 32 C8T6 还便宜） [链接在这需要自取](https://item.taobao.com/item.htm?spm=a230r.1.14.6.44c3c5fej8bdIo&id=531755241333&ns=1&abbucket=6#detail) 。
 
@@ -70,11 +70,11 @@ ESP8266基于MicroPython可以提供的外设资源和驱动有：
 
 上述ESP8266模块烧录程序的方式是通过ESP82266板载的一组UART0 (GPIO1=TX, GPIO3=RX)，这组UART0在模块上连接了一个串口芯片 CH340 (也可能是其他的型号，电脑要安装对应型号的驱动)。因此需要MicroUSB的接口连接电脑USB，进行供电和数据传输。
 
-![Interface](README.assets/Inteface.png)
+![Interface](README.assets/Interface.png)
 
 所需要的MicroUSB数据线（就是以前很多人说的安卓接口）接口示意见下图：
 
-![MciroUSB Wire](README.assets/MciroUSB Wire.png)
+![MicroUSB Wire](README.assets/MicroUSB Wire.png)
 
 #### 其他设备
 
@@ -139,11 +139,101 @@ ESP8266的片上资源非常有限（RAM），因此建议避免分配太多的�
 
 ### 开始使用MicroPython
 
-获取串口
+将ESP8266模块通过MicroUSB线缆，与PC连接。默认此时已经完成了ESP8266模块的上电操作。
 
-获取固件
+### 电脑识别串口
 
-烧录固件
+电脑端应该已经识别了ESP8266模块上的串口芯片，如果在资源管理器中看到对应的COM口出现感叹号，就必须要安装串口相关驱动了（这个之前有提到过）。下图所示的状态就是已经识别并成功安装驱动。
+
+![1607255359510](README.assets/1607255359510.png)
+
+或者可以在CMD控制台中输入`mode` 指令：
+
+```bash
+C:\Users\Administrator>mode
+```
+
+控制台中就会列举出已经连接的串口，如下图所示：
+
+![1607255325264](README.assets/1607255325264.png)
+
+#### 串口波特率修改方式
+
+串口波特率如果不是115200，可以在设备管理器中进行修改，操作步骤如下（这个GIF制作的有点BUG，不过不影响内容；）：
+
+![COM config](README.assets/COM config.gif)
+
+### 获取固件
+
+固件（firmware）可以理解为电脑的系统，有三种版本，适配不同的外挂Flash大小；本系列ESP8266模块外挂Flash大小为4M，所以可以选用Stable firmware，[这里是下载地址](http://micropython.org/download/esp8266/) 。选择最新版的即可：
+
+- esp8266-20200911-v1.13.bin (elf, map) (latest)
+
+### 烧录固件
+
+需要使用esptool来烧录刚才下载好的固件。
+
+#### 安装esptool
+
+在CMD控制台中使用`pip` 工具安装esptool。pip为Python解释器的工具，此处使用python 3，对应指令应修改为：
+
+```bash
+pip3 install esptool
+```
+
+安装好之后键入`esptool.py version` ，可以查看当前工具版本：
+
+```bash
+C:\Users\Administrator>esptool.py version
+esptool.py v2.6
+2.6
+```
+
+这样，就可以愉快的使用此工具进行ESP8266的固件烧录了。
+
+#### 清除Flash
+
+可以使用这样的命令清除ESP8266模块上flash内容（现在端口修改为COM8）：
+
+```bash
+esptool.py --port COM8 erase_flash
+```
+
+如果擦除成功会出现下面的状态：
+
+```bash
+C:\Python3\Lib\site-packages>esptool.py --port COM8 erase_flash
+esptool.py v2.6
+Serial port COM8
+Connecting....
+Detecting chip type... ESP8266
+Chip is ESP8266EX
+Features: WiFi
+MAC: b4:e6:2d:34:ae:9d
+Uploading stub...
+Running stub...
+Stub running...
+Erasing flash (this may take a while)...
+Chip erase completed successfully in 9.2s
+Hard resetting via RTS pin...
+
+C:\Python3\Lib\site-packages>
+```
+
+如果命令行执行一直显示`serial.serialutil.SerialException: could not open port 'COM8': PermissionError(13, '拒绝访问。', None, 5)` ，有两点建议：
+
+1. 命令行切换到esptool.py的安装目录：`C:\Python3\Lib\site-packages>` ;
+2. 重新对ESP8266模块重新上电。
+
+直至出现烧录，结束之后可以通过板载的`RST`按钮进行复位。
+
+#### 可以烧录了
+
+
+
+
+
+
 
 ### 使用REPL prompt点灯
 
