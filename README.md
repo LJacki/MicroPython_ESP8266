@@ -229,17 +229,70 @@ C:\Python3\Lib\site-packages>
 
 #### 可以烧录了
 
+接着刚才的目录，将firmware文件`esp8266-20200911-v1.13.bin` 拷贝到该目录下，在控制台中执行：
+
+```bash
+esptool.py --port COM8 --baud 460800 write_flash --flash_size=detect 0 esp8266-20200911-v1.13.bin
+```
+
+成功安装将得到的结果如下：
+
+```bash
+success！
+```
+
+如果未能成功安装，详细的排查方案参考这里[解决安装问题](http://docs.micropython.org/en/latest/esp8266/tutorial/intro.html#troubleshooting-installation-problems) 。笔者提供两个检查方法：
+
+1. 检查命令行格式是否正确；
+2. 检查检查端口是否识别，可以先进行擦除，擦除成功后紧接着进行烧录；
+
+### 使用REPL prompt
+
+REPL(Read Evaluate Print Loop)，可以理解为循环读取评估板信息。ESP8266模块就可以通过这互动了解内部的MicroPython程序或者命令行操作。可以通过UART串口或者WIFI进行连接。
+
+本系列只介绍UART连接，WIFI连接可自行查看[WebREPL - a prompt over WiFi](http://docs.micropython.org/en/latest/esp8266/tutorial/repl.html#webrepl-a-prompt-over-wifi) 。
+
+#### UART prompt
 
 
 
 
-
-
-### 使用REPL prompt点灯
 
 使用REPL
 
 点灯，循环
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
