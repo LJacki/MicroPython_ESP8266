@@ -238,8 +238,33 @@ esptool.py --port COM8 --baud 460800 write_flash --flash_size=detect 0 esp8266-2
 成功安装将得到的结果如下：
 
 ```bash
-success！
+C:\Python3\Lib\site-packages>esptool.py --port COM8 --baud 460800 write_flash --flash_size=detect 0 esp8266-20200911-v1.13.bin
+esptool.py v2.6
+Serial port COM8
+Connecting....
+Detecting chip type... ESP8266
+Chip is ESP8266EX
+Features: WiFi
+MAC: b4:e6:2d:34:ae:9d
+Uploading stub...
+Running stub...
+Stub running...
+Changing baud rate to 460800
+Changed.
+Configuring flash size...
+Auto-detected Flash size: 4MB
+Flash params set to 0x0040
+Compressed 638928 bytes to 419659...
+Wrote 638928 bytes (419659 compressed) at 0x00000000 in 9.4 seconds (effective 541.1 kbit/s)...
+Hash of data verified.
+
+Leaving...
+Hard resetting via RTS pin...
+
+C:\Python3\Lib\site-packages>
 ```
+
+而且， 烧录成功默认ESP8266处于AP状态，可以打开手机或电脑WIFI搜索，搜索到以MicroPython-xxxxxx形式存在的WIFI，这种连接方式作用于下一小节，通过WIFI连接REPL prompt。
 
 如果未能成功安装，详细的排查方案参考这里[解决安装问题](http://docs.micropython.org/en/latest/esp8266/tutorial/intro.html#troubleshooting-installation-problems) 。笔者提供两个检查方法：
 
@@ -254,41 +279,74 @@ REPL(Read Evaluate Print Loop)，可以理解为循环读取评估板信息。ES
 
 #### UART prompt
 
+REPL始终映射的是UART0外设，ESP8266的GPIO1为TX，GPIO3为RX，波特率为1152000。
 
+本系列的ESP8266模块上有串口芯片，因此可以通过MicrUSB线缆直接连接电脑。
 
+在Windows，本系列选用的是`Tera Term` 工具，这里留下[Tera Term下载地址]()正如前面所述，也可以使用其他带有串口接受和发送的软件。
 
+打开软件，设置好COM8和波特率，按下ESP8266模块的`RST` 按键，即可获取信息：
 
-使用REPL
+```bash
+MicroPython v1.13 on 2020-09-11; ESP module with ESP8266
+Type "help()" for more information.
+>>>
+```
 
-点灯，循环
+这样就是熟悉的界面，类似于Python的解释器样式，就可以使用Python的命令行操作：
 
+![1607355166228](README.assets/1607355166228.png)
 
+嗯嗯，可以在这里试一试Python相关的命令行操作，接下来就可以点灯啦！
 
+### 点灯大法
 
+ESP8266模块默认板载GPIO2连接了一颗LED灯（本系列是蓝色的灯）。可以控制GPIO2来改变灯的状态，键入如下Code：
 
+```python
+>>> import machine
+>>> pin = machine.Pin(2, machine.Pin.OUT)
+>>> pin.on()
+>>> pin.off()
+>>>
+```
 
+如果操作正常，就应该能看到ESP8266模块上的灯亮起；上述`pin.on() `和 `pin.off()` 的状态与本系列的LED灯的控制相反，这个不必过多纠结。
 
+#### 循环电灯
 
+在这个REPL pormpt命令行中，支持很多常规操作如：
 
+- 上键下键，获取输入历史；
+- Tab自动补全；
+- 函数，方法定义自动换行续航，缩进；
+- Ctrl - E进入特殊粘贴模式，可以粘贴一段Code；
 
+那么就可以定义一个LED跳转的函数，进行循环电灯的操作：
 
+```python
+>>> import machine
+>>> pin = machine.Pin(2, machine.Pin.OUT)
+>>> pin.on()
+>>> pin.off()
+>>> def toggle(p):
+...     p.value(not p.value())
+...
+>>> toggle(pin)
+>>> toggle(pin)
+>>> import time
+>>> while True:
+...     toggle(pin)
+...     time.sleep_ms(500)
+...
 
+```
 
+ESP8266模块GPIO2被驱动闪烁的实际效果图如下：
 
+![Blink](README.assets/Blink.gif)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+这个时候肯定是极大的喜悦。这种命令行进行code编写，在学习的时候比较方便，之后会介绍通过文件的形式进行比较大的程序编写。
 
 
 
