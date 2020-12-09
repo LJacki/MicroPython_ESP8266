@@ -500,10 +500,26 @@ def fading():
 
 如果感兴趣，可以根据官网的教程走一遍，内容有ADC，SPI bus，I2C bus，RTC，Deep-sleep mode，OneWire driver，NeoPixel driver，APA102 driver，DHT dirver等；[连接在此](http://docs.micropython.org/en/latest/esp8266/quickref.html#adc-analog-to-digital-conversion) 。
 
-## 驱动0.96 Inch OLED
-
-
-
-
-
 ## 接入贝壳物联
+
+本来计划先把所有的硬件介绍完，再介绍如何介入贝壳物联的。但是那样就比较枯燥，还是先尝试接入贝壳物联，来增加ESP8266模块的可玩性。
+
+
+
+如果wifi连接不成功，会有什么信息提示？
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## 驱动0.96 Inch OLED
