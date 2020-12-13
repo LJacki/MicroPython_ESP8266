@@ -1,6 +1,7 @@
 from machine import Pin
 import time
 import network
+import json
 import socket
 
 SSID = "MEIZU 17"	# 这里为WIFI名称
@@ -26,17 +27,17 @@ def connect_bigiot(s):
 	# s = socket.socket()
 	# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	addr = socket.getaddrinfo(host, port)[0][-1]
-	
+
 	try:
 		s.connect(addr)
 	except:
 		print('Waiting for connect bigiot.net')
-		
+
 	print('Connect bigiot success!')
 	# 获取会话返回信息
 	ans = s.recv(100)
 	print(ans)
-	
+
 	# 连接至贝壳物联后，需要通过发送命令，使得设备上线
 	checkinBytes=bytes('{\"M\":\"checkin\",\"ID\":\"'+DEVICEID+'\",\"K\":\"'+APIKEY+'\"}\n', 'utf8')
 	s.sendall(checkinBytes)
@@ -44,11 +45,14 @@ def connect_bigiot(s):
 	ans = s.recv(100)
 	print(ans)
 
-	
+
 def keepOnline(s, t):
-	if time.time()-t>30:
-		s.sendall(b'{\"M\":\"status\"}\n')
+	if time.time()-t>10:
+		sayBytes = bytes('{\"M\":\"status\"}\n', 'utf8')
+		s.sendall(sayBytes)
 		print('Check status.')
+		ans = s.recv(100)
+		print(ans)
 		return time.time()
 	else:
 		return t
@@ -71,18 +75,18 @@ def main():
 	ledPin = Pin(2, Pin.OUT)
 	# 定义引脚的初始状态为关闭, 此ESP8266模块中on()为LED熄灭；
 	ledPin.off()
-	
+
 	# 先连接WIFI
 	connect_wifi()
-	
+
 	# 再连接贝壳物联
 	s = socket.socket()
 	connect_bigiot(s)
-	
+
 	recvData = b''
 	t = time.time()
-	print("time is :{} ".format(t))
-	
+	print("now the time is :{} ".format(t))
+
 	while True:
 		try:
 			recvData = s.recv(100)
@@ -91,12 +95,8 @@ def main():
 			msg = json.loads(msg)
 			print("Received Data is : {}".format(msg))
 			if msg["C"] == "offOn":
-				print("toggle1")
 				toggle(ledPin)
-				print("toggle2")
-			time.sleep(1)
 		except:
-			pass
-#			time.sleep(1)
-#			t = keepOnline(s, t)
-#			print("Keep Online. t = {}\n".format(t))
+			time.sleep(1)
+			t = keepOnline(s, t)
+			print("Keep Online. t = {}\n".format(t))
