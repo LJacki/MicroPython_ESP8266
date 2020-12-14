@@ -97,6 +97,6 @@ def main():
 			print("Keep online operate, The time now is {}\n".format(t))
 		if recvData : # 接收到数据
 			msg = json.loads(str(recvData, 'utf-8'))
-			print("Received Data is : {}\n".format(msg["C"]))
+			print("Received Data is : {}\n".format(msg))
 			if msg["C"] == "offOn": # 接收到offOn的命令，执行操作
 				toggle(ledPin)
