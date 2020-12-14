@@ -100,3 +100,4 @@ def main():
 			print("Received Data is : {}\n".format(msg))
 			if msg["C"] == "offOn": # 接收到offOn的命令，执行操作
 				toggle(ledPin)
+			recvData = b''
