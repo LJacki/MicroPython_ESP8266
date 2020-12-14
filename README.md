@@ -820,13 +820,15 @@ b'{"M":"checkinok","ID":"D10471","NAME":"LED\\u706f",'
 根据设备入网需求，再8181端口需要设备每隔40~50s向服务器发送依次心跳包，这里先设定每隔40秒，发送一次check status：
 
 ```python
-def keepOnline(socket, time):
-	if time.time()-t>40:
-		s.sendall(b'{\"M\":\"status\"}\n')
-		print('Check status.')
-		return time.time()
+def keepOnline(s, t):
+	if utime.time()-t > 40:
+		sayBytes = bytes('{\"M\":\"status\"}\n', 'utf8')
+		s.sendall(sayBytes)
+		ans = s.recv(100)
+		print('Check status : {}\n'.format(json.loads(str(ans, 'utf-8'))["M"]))
+		return utime.time()
 	else:
-		return time
+		return t
 ```
 
 LED的状态有两种，设定最简单的开关方式：
@@ -839,14 +841,39 @@ def toggle(pin):
 接下来的交给main()函数，使用轮询的方式，判断是否收到web端/或手机端的消息，来判断是否需要对本地的LED灯状态进行改变：
 
 ```python
+def main():
 
+	# 定义引脚2为输出
+	ledPin = Pin(2, Pin.OUT)
+	# 定义引脚的初始状态为关闭, 此ESP8266模块中on()为LED熄灭；
+	ledPin.off()
+
+	# 先连接WIFI
+	connect_wifi()
+
+	# 再连接贝壳物联
+	s = socket.socket()
+	# 设置超时
+	s.settimeout(10)
+	connect_bigiot(s)
+
+	recvData = b''
+	t = utime.time()
+	print("The start time is :{}\n".format(t))
+
+	while True:
+
+		try:	# 在超时时间内是否接收到数据
+			recvData = s.recv(100)
+		except: # 如果接收不到，维持上线状态
+			t = keepOnline(s, t)
+			print("Keep online operate, The time now is {}\n".format(t))
+		if recvData : # 接收到数据
+			msg = json.loads(str(recvData, 'utf-8'))
+			print("Received Data is : {}\n".format(msg["C"]))
+			if msg["C"] == "offOn": # 接收到offOn的命令，执行操作
+				toggle(ledPin)
 ```
-
-
-
-
-
-
 
 
 
