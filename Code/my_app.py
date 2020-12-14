@@ -1,5 +1,5 @@
 from machine import Pin
-import time
+import utime
 import network
 import json
 import socket
@@ -47,13 +47,12 @@ def connect_bigiot(s):
 
 
 def keepOnline(s, t):
-	if time.time()-t>10:
+	if utime.time()-t>40:
 		sayBytes = bytes('{\"M\":\"status\"}\n', 'utf8')
 		s.sendall(sayBytes)
-		print('Check status.')
 		ans = s.recv(100)
-		print(ans)
-		return time.time()
+		print('Check status : {}\n'.format(json.loads(str(ans, 'utf-8'))["M"]))
+		return utime.time()
 	else:
 		return t
 
@@ -66,7 +65,7 @@ def blink(time_ms):
 	while True:
 		# 延时1000ms使ledPin进行数值反转
 		ledPin.value(not ledPin.value())
-		time.sleep_ms(1000)
+		utime.sleep_ms(1000)
 
 
 def main():
@@ -81,22 +80,23 @@ def main():
 
 	# 再连接贝壳物联
 	s = socket.socket()
+	# 设置超时
+	s.settimeout(10)
 	connect_bigiot(s)
 
 	recvData = b''
-	t = time.time()
-	print("now the time is :{} ".format(t))
+	t = utime.time()
+	print("The start time is :{}\n".format(t))
 
 	while True:
-		try:
+
+		try:	# 在超时时间内是否接收到数据
 			recvData = s.recv(100)
-			# print("recvData is :{}\n".format(recvFlag))
-			msg = str(recvData, 'utf-8')
-			msg = json.loads(msg)
-			print("Received Data is : {}".format(msg))
-			if msg["C"] == "offOn":
-				toggle(ledPin)
-		except:
-			time.sleep(1)
+		except: # 如果接收不到，维持上线状态
 			t = keepOnline(s, t)
-			print("Keep Online. t = {}\n".format(t))
+			print("Keep online operate, The time now is {}\n".format(t))
+		if recvData : # 接收到数据
+			msg = json.loads(str(recvData, 'utf-8'))
+			print("Received Data is : {}\n".format(msg["C"]))
+			if msg["C"] == "offOn": # 接收到offOn的命令，执行操作
+				toggle(ledPin)
