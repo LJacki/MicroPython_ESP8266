@@ -817,7 +817,7 @@ b'{"M":"checkinok","ID":"D10471","NAME":"LED\\u706f",'
 
 #### 通过Web/手机控制设备
 
-根据设备入网需求，再8181端口需要设备每隔40~50s向服务器发送依次心跳包，这里先设定每隔40秒，发送一次check status：
+根据设备入网需求，再8181端口需要设备每隔40~50s向服务器发送依次心跳包，这里先设定每隔40秒（也可以用中断的方式），发送一次check status：
 
 ```python
 def keepOnline(s, t):
@@ -870,41 +870,43 @@ def main():
 			print("Keep online operate, The time now is {}\n".format(t))
 		if recvData : # 接收到数据
 			msg = json.loads(str(recvData, 'utf-8'))
-			print("Received Data is : {}\n".format(msg["C"]))
-			if msg["C"] == "offOn": # 接收到offOn的命令，执行操作
-				toggle(ledPin)
+			print("Received Data is : {}\n".format(msg))
+			if "C" in msg.keys(): # 接收到offOn的命令，执行操作
+				if msg["C"] == "offOn":
+					toggle(ledPin)
+				else:
+					print("The other C in msg : {}\n".format(msg["C"]))
+			else:
+				print("NO keys C in the msg!\n")
+			recvData = b''
 ```
 
+主函数中，先定义LED引脚为输出，再连接WIFI，后连接贝壳物联；通过接受贝壳物联返回的信息， 根据信息`offOn` ，控制LED反转；
 
+通过贝壳物联Web端，或者是微信小程序，就可以控制这个名称为LED灯的设备开关了。延时效果如下：
 
+![Control](README.assets/Control.gif)
 
+仔细观察开关按钮和ESP8266模块上蓝色的LED灯；
 
+登录[贝壳物联微信小程序](https://www.bigiot.net/mobile.html) ，也可以看到名称为LED灯的设备在线，也同样支持相同的方式进行控制，界面效果如下：
 
+![1608040347903](README.assets/1608040347903.png)
 
+想必，细心的你已经发现控制面板上还有很多控制按钮（其实也可以自定义控件），那么就可以根据控件进行其他的控制了，emm后面的内容就更加丰富了。
 
+至此，使用Micropython，配合ESP8266模块，接入贝壳物联这一路也就畅通了。
 
+后面需要做的事情还有很多，比如：
 
+- [ ] 使用中断进行间隔状态查询；
+- [ ] 通过AP对wifi的SSID和PASSWORD进行设置；
+- [ ] 丰富接收信息处理内容；
+- [ ] 丰富ESP8266模块连接硬件的功能；
+- [ ] OTA远程软件升级？
+- [ ] 模块系统化，精致化等等；
 
-
-
-
-
-
-
-如果wifi连接不成功，会有什么信息提示？
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+道阻且长，向前进。
 
 ## 驱动0.96 Inch OLED
+
