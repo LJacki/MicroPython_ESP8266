@@ -98,6 +98,11 @@ def main():
 		if recvData : # 接收到数据
 			msg = json.loads(str(recvData, 'utf-8'))
 			print("Received Data is : {}\n".format(msg))
-			if msg["C"] == "offOn": # 接收到offOn的命令，执行操作
-				toggle(ledPin)
+			if "C" in msg.keys(): # 接收到offOn的命令，执行操作
+				if msg["C"] == "offOn":
+					toggle(ledPin)
+				else:
+					print("The other C in msg : {}\n".format(msg["C"]))
+			else:
+				print("NO keys C in the msg!\n")
 			recvData = b''
