@@ -13,6 +13,9 @@ APIKEY = "2530067a3"
 host = "www.bigiot.net"
 port = 8181
 
+DAT_ID = "9333"
+DAT_ID2 = "18324"
+
 def connect_wifi():
 	wlan = network.WLAN(network.STA_IF)
 	wlan.active(True)
@@ -57,9 +60,16 @@ def keepOnline(s, t):
 	else:
 		return t
 
-def updateData(s, id, key, data):
-	sayBytes = bytes('{\"M\":\"update\",\"ID\":\"'+id+'\",\"V\":\"'+ '{\"key\":\"data\" }' +'\"}\n','utf8')
+
+def updateData(s, id, did, data):
+	sayBytes = bytes('{\"M\":\"update\",\"ID\":\"' + id + '\",\"V\":{\"' + did + '\":\"' + data + '\"}}\n','utf8')
 	s.sendall(sayBytes)
+
+
+def updateData2(s, id, did1, data1, did2, data2):
+	sayBytes = bytes('{\"M\":\"update\",\"ID\":\"' + id + '\",\"V\":{\"' + did1 + '\":\"' + data1 + '\",\"' + did2 + '\":\"' + data2 +'\"}}\n','utf8')
+	s.sendall(sayBytes)
+
 
 def toggle(pin):
 	pin.value(not pin.value())
@@ -87,10 +97,10 @@ def main():
 
 	while True:
 
-		utime.sleep(1)
+		utime.sleep(2)
 
 		d.measure()
 		print("The temperature is : {}".format(d.temperature()))
 		print("The humidity is : {}".format(d.humidity()))
-		updateData(s, DEVICEID, "tem", d.temperature())
-		utime.sleep(1)
+		updateData2(s, DEVICEID, DAT_ID, str(d.temperature()), DAT_ID2, str(d.humidity()))
+		utime.sleep(3)
