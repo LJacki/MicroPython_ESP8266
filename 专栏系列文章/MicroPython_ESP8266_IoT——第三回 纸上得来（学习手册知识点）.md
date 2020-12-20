@@ -6,7 +6,7 @@
 
 ## 核心时钟
 
-可以通过模块machine，对CPU核心时钟进行修改，默认是80MHz，可超频至160MHz：
+可以通过模块`machine`，对CPU核心时钟进行修改，默认是80MHz，可超频至160MHz：
 
 ```python
 import machine
@@ -17,7 +17,7 @@ machine.freq(160000000) # set the CPU frequency to 160 MHz
 
 没有尝试过最高多少，一般情况下，当然是设定为160 MHz，速度快用起来才爽。
 
-可以通过模块esp，打开或关闭调试信息重定向（此处默认应为打开）：
+可以通过模块`esp`，打开或关闭调试信息重定向（此处默认应为打开）：
 
 ```python
 import esp
@@ -30,7 +30,7 @@ esp.osdebug(0)          # redirect vendor O/S debugging messages to UART(0)
 
 用ESP8266模块，那联网的功能肯定不能少，网络链接模块工作方式在network中。
 
-其中wlan可以工作在STA_IF和AP_IF两种状态，STA_IF状态可以通过connect方法输入WIF账号和密码连接到网络；AP_IF状态可以创建名称特定的热点。
+其中wlan可以工作在`STA_IF`和`AP_IF`两种状态，`STA_IF`状态可以通过connect方法输入WIF账号和密码连接到网络；AP_IF状态可以创建名称特定的热点。
 
 ```python
 import network
@@ -146,18 +146,20 @@ def fading():
 
 可以看一下实际效果图GIF：
 
-==这里有一个GIF==
+![Breath](https://i.loli.net/2020/12/20/gKkMG6HviVQz8xF.gif)
 
-可以通过调整sin函数的系数，来调节呼吸的频率；通过调节占空比的基础数值（上述程序中为523），来调节亮，灭的时间范围；
+可以通过调整`sin`函数的系数，来调节呼吸的频率；通过调节占空比的基础数值（上述程序中为523），来调节亮，灭的时间范围；
 
 ## 其他
 
 后面还有其他的类和方法，都是接口相关的，想要等到后面有小制作的时候，再结合实物，详细的说明。
 
-如果感兴趣，可以根据官网的教程走一遍，内容有ADC，SPI bus，I2C bus，RTC，Deep-sleep mode，OneWire driver，NeoPixel driver，APA102 driver，DHT dirver等，[连接在此](http://docs.micropython.org/en/latest/esp8266/quickref.html#adc-analog-to-digital-conversion) 。
+如果感兴趣，可以根据官网的教程走一遍，内容有ADC，SPI bus，I2C bus，RTC，Deep-sleep mode，OneWire driver，NeoPixel driver，APA102 driver，DHT dirver等，[MciroPython官网连接教程在此](http://docs.micropython.org/en/latest/esp8266/quickref.html#adc-analog-to-digital-conversion) 。
 
 ## 结束语
 
 第三回比较缓和，适合自行尝试，学习。这部分内容学习之后，就会有很多想法，对于物的操作是需要根据需求来实现的。
 
 接下来，一起学习第四回，初入联网，使用ESP8266模块接入贝壳物联。
+
+2020-12-20；
