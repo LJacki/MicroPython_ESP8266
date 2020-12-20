@@ -98,11 +98,9 @@ MicroPython的相关信息可以通过[MicroPython官网](http://www.micropython
 
 **声明**：由于部分软件下载，可能会受到网络不可抗力约束，所以后续使用到的软件工具会统一使用[LZ网盘](https://sharewow.lanzous.com/b00u1gt5c) 进行上传和下载：
 
-链接：https://sharewow.lanzous.com/b00u1gt5c
+**链接**：https://sharewow.lanzous.com/b00u1gt5c
 
-密码：share
-
-（本来设定的是密码在公众号：`sharewow`后台回复micropython获取；不过你非要公众号后台回复一波，也会是一样的密码；）
+**密码**：本来设定的是密码在公众号：`sharewow`后台回复**micropython**获取；现在也可以私信回复；
 
 ### 串口相关
 
