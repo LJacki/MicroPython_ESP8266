@@ -30,3 +30,9 @@ http://www.hackernotcracker.com/2006-04/WOL-wake-on-lan-tutorial-with-bonus-php-
 STA & AP 介绍 https://randomnerdtutorials.com/micropython-esp32-esp8266-access-point-ap/
 
 AP状态下的默认IP地址为192.168.4.1，可以通过`ap.ifconfig()`获得。在浏览器输入对应ip地址就可以连接到对应的web。
+
+## uPyCraft IDE
+
+https://randomnerdtutorials.com/install-upycraft-ide-windows-pc-instructions/#more-74513
+
+uPyCraft 的使用；http://docs.dfrobot.com.cn/upycraft/
