@@ -5,8 +5,11 @@ import network
 import json
 import socket
 
-SSID = "MEIZU 17"	# 这里为WIFI名称
-PASSWORD = "123456.789" # 这里为WIFI密码
+#SSID = "MEIZU 17"	# 这里为WIFI名称
+#PASSWORD = "123456.789" # 这里为WIFI密码
+
+SSID = "Amina"	# 这里为WIFI名称
+PASSWORD = "Amina@2020" # 这里为WIFI密码
 
 DEVICEID = "10471"
 APIKEY = "2530067a3"
@@ -85,7 +88,7 @@ def blink(time_ms):
 def main():
 
 	# 定义引脚4为控制引脚
-	d = dht.DHT11(Pin(4))
+	d = dht.DHT11(Pin(0))
 	# 先连接WIFI
 	connect_wifi()
 	# 再连接贝壳物联
