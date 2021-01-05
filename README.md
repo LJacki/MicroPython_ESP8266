@@ -31,8 +31,25 @@ STA & AP 介绍 https://randomnerdtutorials.com/micropython-esp32-esp8266-access
 
 AP状态下的默认IP地址为192.168.4.1，可以通过`ap.ifconfig()`获得。在浏览器输入对应ip地址就可以连接到对应的web。
 
+这个发现在Micropython上的socket模块上，不能支持广播，原生的Python库是可以的。
+
+又因为BIOS中可以设定为定时开机，也就，暂时不解决了。
+
 ## uPyCraft IDE
 
 https://randomnerdtutorials.com/install-upycraft-ide-windows-pc-instructions/#more-74513
 
 uPyCraft 的使用；http://docs.dfrobot.com.cn/upycraft/
+
+## web登录wifi
+
+相关资料：
+
+https://www.cnblogs.com/imliubo/p/10457273.html
+
+https://randomnerdtutorials.com/esp32-esp8266-micropython-web-server/
+
+https://randomnerdtutorials.com/wifimanager-with-esp8266-autoconnect-custom-parameter-and-manage-your-ssid-and-password/
+
+https://randomnerdtutorials.com/micropython-wi-fi-manager-esp32-esp8266/
+
