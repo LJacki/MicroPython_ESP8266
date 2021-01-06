@@ -11,8 +11,8 @@ html = """<!DOCTYPE html>
 """
 
 def web_page():
-  html = """<html><head><meta name="viewport" content="width=device-width, initial-scale=1"</head><body><h1>Hello, World!</h1></body></html>"""
-  return html
+	html = """<html><head><meta name="viewport" content="width=device-width, initial-scale=1"</head><body><h1>Hello, World!</h1></body></html>"""
+	return html
 
 
 import socket

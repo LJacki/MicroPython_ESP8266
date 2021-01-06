@@ -1,19 +1,9 @@
-import usocket as socket
-import ustruct as struct
-import network
-import time
+import socket
+import struct
 
-#MAC_ADDR = "E0-D5-5E-7A-CA-E1"
-#BROADCAST_IP = "192.168.1.11"
 MAC_ADDR = "A4-AE-12-2C-95-84"
 BROADCAST_IP = "192.168.1.17"
 DEFAULT_PORT = "9"
-
-#SSID = "ChinaNet-KQUP"	# 这里为WIFI名称
-#PASSWORD = "hbgxtf66" # 
-
-SSID = "Amina"
-PASSWORD = "Amina@2020"
 
 def create_magic_packet(macaddress):
 	"""
@@ -69,7 +59,8 @@ def send_magic_packet(mac, ip_address, port):
 	print(packet)
 
 	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-	sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+	sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+	
 	addr = socket.getaddrinfo(ip, port)[0][-1]
 	sock.connect(addr)
 	sock.send(packet)
@@ -78,20 +69,7 @@ def send_magic_packet(mac, ip_address, port):
 	print('sent to '+ip)
 
 
-def connect_wifi():
-	wlan = network.WLAN(network.STA_IF)
-	wlan.active(True)
-	if not wlan.isconnected():
-		print('\nConnecting to network...')
-		wlan.connect(SSID, PASSWORD)
-		while not wlan.isconnected():
-			pass
-	print('Network config:', wlan.ifconfig())
 
 def main():
 
-	connect_wifi()
-	print("The wlan connect successfully!")
-	time.sleep(2)
 	send_magic_packet(MAC_ADDR, BROADCAST_IP, DEFAULT_PORT)
-	time.sleep(2)
