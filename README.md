@@ -36,3 +36,15 @@ AP状态下的默认IP地址为192.168.4.1，可以通过`ap.ifconfig()`获得�
 https://randomnerdtutorials.com/install-upycraft-ide-windows-pc-instructions/#more-74513
 
 uPyCraft 的使用；http://docs.dfrobot.com.cn/upycraft/
+
+## MciroPython + Pycharm
+
+https://github.com/vlasovskikh/intellij-micropython github仓库地址；
+
+https://singtown.com/learn/48860/
+
+Device path COM5
+Quit: Ctrl+] | Stop program: Ctrl+C | Reset: Ctrl+D
+
+烧录文件和串口打印的时候不能占用串口，所以如果不用REPL，使用Ctrl + ]退出串口占用；
+
