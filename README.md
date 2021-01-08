@@ -72,3 +72,12 @@ Device path COM5
 Quit: Ctrl+] | Stop program: Ctrl+C | Reset: Ctrl+D
 
 烧录文件和串口打印的时候不能占用串口，所以如果不用REPL，使用Ctrl + ]退出串口占用；
+
+## DHT模块
+
+只有DHT模块工作的时候，间隔至少5s，不会引起dht设备测量异常。
+
+如果只有中断情况下，会不会退出？
+
+需要在加入贝壳物联后检测是否在线。
+

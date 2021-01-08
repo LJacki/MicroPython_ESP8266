@@ -1,4 +1,10 @@
-参考官方手册中，对network库的介绍：[`network`-network configuration](http://docs.micropython.org/en/latest/library/network.html) 。此模块提供网络连接的驱动，以及路由配置。配置网络后，可以通过`usocket`模块获取网络服务。
+# MicroPython_ESP8266_IoT——第五回 网页配置（局域网连接WIFI）
+
+参考官方手册中，对network库的介绍：[`network`-network configuration](http://docs.micropython.org/en/latest/library/network.html) 。
+
+## network模块介绍
+
+此模块提供网络连接的驱动，以及路由配置。配置网络后，可以通过`usocket`模块获取网络服务。
 
 举个例子：
 
@@ -88,5 +94,11 @@ hidden的值也有两种：
 
 看过了这些方法，可以在REPL中挨个使用，加深对这些方法的理解；
 
- 
+Wi-Fi Manager Works
+
+这一部分内容并非本人原创，[这里为Github仓库地址](https://github.com/tayfunulu/WiFiManager) 。使用tayfunuln的WiFiManager，可以使用MicroPython配合ESP32或ESP8266等硬件，进行Wi-Fi连接的管理。
+
+可以理解为手机打开WiFi的开关后，自动搜索周围的WiFi，选中需要连接的WiFi名称，输入对应密码即可连接。此外，还支持记住网络，将WiFi名称自动保存在ESP8266等Flash中，方便复位之后自动连接。
+
+
 
