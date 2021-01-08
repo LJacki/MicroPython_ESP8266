@@ -26,14 +26,22 @@ def connect_bigiot(s):
 
 	print('Connect bigiot success!')
 	# 获取会话返回信息
-	ans = s.recv(100)
+	ans = s.recv(500)
 	print(ans)
 
 	# 连接至贝壳物联后，需要通过发送命令，使得设备上线
 	checkinBytes = bytes('{\"M\":\"checkin\",\"ID\":\"' + DEVICEID + '\",\"K\":\"' + APIKEY + '\"}\n', 'utf8')
 	s.sendall(checkinBytes)
 	print('Send check in bytes OK!')
-	ans = s.recv(100)
+	ans = s.recv(500)
+	print(ans)
+
+
+def isOL(s):
+	checkinBytes = bytes('{\"M\":\"isOL\",\"ID\": [\"D' + DEVICEID + '\"]}\n', 'utf8')
+	s.sendall(checkinBytes)
+	print('Check isOL!')
+	ans = s.recv(500)
 	print(ans)
 
 
@@ -62,6 +70,16 @@ def dht_measure(dhtname):
 	humidity = dhtname.humidity()
 	return temperature, humidity
 
+
+def dht_updata(s, dhtname):
+	utime.sleep(5)
+
+	(temp, hudt) = dht_measure(dhtname)
+	print("The temperature is : {: >2d} C".format(temp))
+	print("The humidity    is : {: >2d} %".format(hudt))
+	updateData2(s, DEVICEID, DAT_ID, str(temp), DAT_ID2, str(hudt))
+
+
 def toggle(pin):
 	pin.value(not pin.value())
 
@@ -79,17 +97,17 @@ def main():
 
 	# 连接贝壳物联
 	s = socket.socket()
-	s.settimeout(5)
+	s.settimeout(10)
+
 	connect_bigiot(s)
 
 	# 中断设定回调心跳服务函数
 	timer0 = Timer(-1)
-	timer0.init(period=5000, mode=Timer.PERIODIC, callback=lambda t:IRQ_heartBear(s))
+	timer0.init(period=20000, mode=Timer.PERIODIC, callback=lambda t:IRQ_heartBear(s))
 
+	timeNum = 0
 	while True:
-		utime.sleep(1)
-
-		(temp, hudt) = dht_measure(dht0)
-		print("The temperature is : {: >2d} C".format(temp))
-		print("The humidity    is : {: >2d} %".format(hudt))
-		updateData2(s, DEVICEID, DAT_ID, str(temp), DAT_ID2, str(hudt))
+		utime.sleep_ms(1000)
+		timeNum += 1
+		print(timeNum)
+		# dht_updata(s, dht0)
