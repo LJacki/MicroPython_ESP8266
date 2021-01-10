@@ -108,7 +108,7 @@ WLAN 网络接口对象有两种：
 
 使用ESP8266建立Access Point，之后同通过web配置网络信息，而且可以自动连接已经保存的网络，使用界面如下：
 
-![Wi-Fi Client Setup WiFi Manager MicroPython](https://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/wifi-manager-esp32-micropython-show-available-networks.png?resize=375%2C389&quality=100&strip=all&ssl=1)
+![Wi-Fi Client Setup WiFi Manager MicroPython](https://gitee.com/sharewow/pic_repo/raw/master/img/wifi-manager-esp32-micropython-show-available-networks.png)
 
 看起来跟手机直连WiFi差不多操作了。
 
@@ -125,7 +125,7 @@ WiFi管理模块是这样工作的：
 
 在[仓库WiFiManager](https://github.com/tayfunulu/WiFiManager)的主页中README中，可以找到工作原理的框图：
 
-![alt text](https://github.com/tayfunulu/WiFiManager/raw/master/WiFi_Manager.png)
+![alt text](https://gitee.com/sharewow/pic_repo/raw/master/img/WiFi_Manager.png)
 
 ## WiFi Manager MicroPython 源码
 
@@ -484,19 +484,19 @@ Listening on:('0.0.0', 80)
 
 按照上述提示，使用手机或者有WiFi的电脑，接入Access Point：WifiManager，密码：tayfunulu（如果修改过，请输入自己修改后的密码）：
 
-![Connect to WiFiManager Network ESP32 MicroPython](https://i1.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/connect-to-wifimanager-network.png?resize=375%2C475&quality=100&strip=all&ssl=1)
+![Connect to WiFiManager Network ESP32 MicroPython](https://gitee.com/sharewow/pic_repo/raw/master/img/connect-to-wifimanager-network.png)
 
 当连接WiFiManager网络成功后，在浏览器地址栏输入IP`192.268.4.1`，就会返回得到如下网页：
 
-![Selecting Wi-Fi Network - WiFiManager MicroPython ESP32](https://i1.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/selecting-wi-fi-network-wifimanager.png?resize=750%2C525&quality=100&strip=all&ssl=1)
+![Selecting Wi-Fi Network - WiFiManager MicroPython ESP32](https://gitee.com/sharewow/pic_repo/raw/master/img/selecting-wi-fi-network-wifimanager.png)
 
 选择你的网络，并输入PASSWORD，点击`Submit`，加载完成后可以跳转到连接成功界面：
 
-![ESP32 successfully connected to Wifi Network - WiFiManager](https://i0.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/successfully-connected-to-network-wifimanager.png?resize=747%2C245&quality=100&strip=all&ssl=1)
+![ESP32 successfully connected to Wifi Network - WiFiManager](https://gitee.com/sharewow/pic_repo/raw/master/img/successfully-connected-to-network-wifimanager.png)
 
 同时，REPL也会出现接入WiFi的提示：
 
-![ESP32 Station IP Address - WiFiManager MicroPython](https://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/wifi-manager-esp32-station-ip.png?resize=707%2C221&quality=100&strip=all&ssl=1)
+![ESP32 Station IP Address - WiFiManager MicroPython](https://gitee.com/sharewow/pic_repo/raw/master/img/wifi-manager-esp32-station-ip.png)
 
 显示已经接入WiFi，以及相应的IP，掩码，网关等；
 
