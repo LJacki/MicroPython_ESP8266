@@ -1,14 +1,12 @@
-# MicroPython_ESP8266_IoT——第五回 网页配置（局域网连接WIFI）
+# MicroPython_ESP8266_IoT——第五回 网页配置（局域网连接WiFi）
 
-参考官方手册中，对network库的介绍：[`network`-network configuration](http://docs.micropython.org/en/latest/library/network.html) 。
+参考官方手册中，对network库的介绍：[`network`——network configuration](http://docs.micropython.org/en/latest/library/network.html) 。
 
-简直在REPL中，通过命令行逐个熟悉提示到的方法，加深理解。
+建议在REPL中，通过命令行逐个熟悉提示到的方法，加深理解。
 
 ## network模块介绍
 
-此模块提供网络连接的驱动，以及路由配置。配置网络后，可以通过`usocket`模块获取网络服务。
-
-使用起来非常方便，官网教程中已经给了例子：
+此模块提供网络连接的驱动，以及路由配置。配置网络后，可以通过`usocket`模块获取网络服务。使用起来非常方便，官网教程中也给了例子：
 
 ```python
 # connect/ show IP config a specific network interface
@@ -35,9 +33,7 @@ s.close()
 
 ### 网络适配接口
 
-这里描述的network接口针对不同的MicroPython硬件有不同的实例。其中适用于ESP8266的为`class WLAN`，就以`class WLAN`[control built-in WiFi interfaces](http://docs.micropython.org/en/latest/library/network.WLAN.html#class-wln-control-built-in-wifi-interfaces) 为例，看一下都有哪些好用的方法。
-
-提供的WiFi网络处理驱动，示例如下：
+这里描述的`network`接口针对不同的MicroPython硬件有不同的实例。提供的WiFi网络处理驱动，示例如下：
 
 ```python
 import network
@@ -48,18 +44,16 @@ nic.connect('your-ssid', 'your-password')
 # now use sockets as usual
 ```
 
+其中适用于ESP8266的为`class WLAN`，那就以`class WLAN`[control built-in WiFi interfaces](http://docs.micropython.org/en/latest/library/network.WLAN.html#class-wln-control-built-in-wifi-interfaces) 为例，看看有哪些方法。
+
 ### 创建对象
 
 WLAN 网络接口对象有两种：
 
-1. `network.STA_IF`（station，也叫做client，连接到上游WiFi接入点）；
-2. `network.AP_IF`（access point, 允许其他WiFi clients连接）；
+1. `network.STA_IF`（station，也叫做client，是连接到上游WiFi接入点）；
+2. `network.AP_IF`（access point，允许其他WiFi clients连接）；
 
-下面提到的方法对否可用取决于接口的类型，比如只有STA接口支持`WLAN.connect()`来接入access point。
-
-方法
-
-此类中的方法有：
+下面提到的方法是否可用取决于接口的类型，比如只有STA接口支持`WLAN.connect()`来接入access point。如下列举此类中的方法：
 
 - WLAN.active([is_active])
 - WLAN.connect(ssid=None, password=None, *, bssid=None)
@@ -71,19 +65,21 @@ WLAN 网络接口对象有两种：
 - WLAN.config(‘param’)
 - WLAN.config(param=value,…)
 
-这些都比较好理解，详细说明可参考官方手册中的介绍。
+这些都比较好理解，根据方法的名称基本就能了解个大概，详细说明可参考官方手册中的[WLAN.()介绍](http://docs.micropython.org/en/latest/library/network.WLAN.html)。
 
 ### 关键方法WLAN.scan()
 
-主要介绍`WLAN.scan()`，用于扫描可用的无线网络（类似于手机打开WIFI之后，就开始搜索附件可用的无线网络）。
+此处主要介绍`WLAN.scan()`，用于扫描可用的无线网络（类似于手机打开WiFi之后，就开始搜索附近可用的无线网络）。
 
-扫描方法只适用于STA接口，会返回包含WiFi接入点的信息元组组成的列表。包含内容如下：
+扫描方法只适用于`STA接口`，会返回包含WiFi接入点的信息元组组成的列表，内容如下：
 
-ssid（WIFI ID）, bssid（MAC）, channel（信道）, RSSI（信号强度）, authmode（加密模式）, hidden（隐藏）
+> ssid（WiFi ID）, bssid（MAC）, channel（信道）；
+>
+> RSSI（信号强度）, authmode（加密模式）, hidden（隐藏）；
 
 其中，`bssid`为接入点硬件地址，为二进制格式，返回为`bytes`对象。可以使用`ubinascii.hexlify()` 转换为ASCII格式。
 
-authmode加密方（没有过多了解这些方式的区别，又兴趣可自行探索）有5个值：
+`authmode`加密方（没有过多了解这些方式的区别，又兴趣可自行探索）有5个值：
 
 - 0 - 不加密；
 - 1 - WEP；
@@ -91,14 +87,14 @@ authmode加密方（没有过多了解这些方式的区别，又兴趣可自行
 - 3 - WPA2-PSK；
 - 4 - WPA/WPA2-PSK;
 
-hidden的值也有两种：
+`hidden`的值也有两种：
 
 - 0 - visible；
 - 1 - hidden；
 
-看过了这些方法，可以在REPL中挨个使用，加深对这些方法的理解；
+看过了这些方法，可以在`REPL`中挨个使用，加深对这些方法的理解（务必学会现在REPL中调试，再向ESP8266中传输文件）；
 
-## Wi-Fi Manager Works
+## WiFi Manager Works
 
 这一部分内容并非本人原创，[这里为Github仓库地址](https://github.com/tayfunulu/WiFiManager) 。使用tayfunuln的WiFiManager，可以使用MicroPython配合ESP32或ESP8266等硬件，进行Wi-Fi连接的管理。
 
@@ -108,32 +104,32 @@ hidden的值也有两种：
 
 方便在更换使用环境的时候，不需要重新在code中修改SSID和PASSWORD，重新烧录程序。
 
-可以想象这么个场景，花时间和心思DIY了一个好玩的，想要分享给女朋友，难道还想要女朋友自己在源码中修改WIFI的账号和密码，再烧录到板子中吗？（如果你不使用Wi-Fi Manager，那么也就只能提前将源码修改好再给女朋友了）
+可以想象这么个场景，花时间和心思DIY了一个好玩的，想要分享给女朋友，难道还想要女朋友自己在源码中修改WiFi的账号和密码，再烧录到板子中吗？（如果你不使用Wi-Fi Manager，那么也就只能提前将源码修改好再给女朋友了）
 
 使用ESP8266建立Access Point，之后同通过web配置网络信息，而且可以自动连接已经保存的网络，使用界面如下：
 
 ![Wi-Fi Client Setup WiFi Manager MicroPython](https://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/wifi-manager-esp32-micropython-show-available-networks.png?resize=375%2C389&quality=100&strip=all&ssl=1)
 
-看起来跟手机直连WIFI差不多操作了。
+看起来跟手机直连WiFi差不多操作了。
 
 ### 工作原理
 
-WIFI管理模块是这样工作的：
+WiFi管理模块是这样工作的：
 
 - EPS8266模块第一次重启，会建立Access Point（名称和密码再源码中设定的）；
 - 连接至上述Access Point后，在浏览器中输入IP地址`192.168.4.1`；
 - 通过显示出的网页，选择一个SSID，并输入密码，点击`submit`;
-- ESP8266保存网络的SSID和输入的PASSWORD，转换为Station mode连接入对应的WiFI网络；
-- 当新的SSID和PASSWORD设定，ESP8266每次重启，都会被设定为Station mode并尝试连接之前保存的WIFI网络；
-- 建立连接后，此模块操作就完成了。否则就回到第一步需要重新配置WIFI网络；
+- ESP8266保存网络的SSID和输入的PASSWORD，转换为Station mode连接入对应的WiFi网络；
+- 当新的SSID和PASSWORD设定，ESP8266每次重启，都会被设定为Station mode并尝试连接之前保存的WiFi网络；
+- 建立连接后，此模块操作就完成了。否则就回到第一步需要重新配置WiFi网络；
 
 在[仓库WiFiManager](https://github.com/tayfunulu/WiFiManager)的主页中README中，可以找到工作原理的框图：
 
 ![alt text](https://github.com/tayfunulu/WiFiManager/raw/master/WiFi_Manager.png)
 
-## WiFiManager MicroPython 源码
+## WiFi Manager MicroPython 源码
 
-因为是非官方的库，所以需要将源码保存到ESP8266设备上，在main.py中调用，源码如下：
+因为是非官方的库，所以需要将源码保存到ESP8266设备上保存文件名称为`wifimgr.py`，方便在`main.py`中调用，源码如下：
 
 ```python
 import network
@@ -457,10 +453,12 @@ ap_password = "tayfunulu"		# 这是ESP8266 接入点的密码
 ap_authmode = 3  # WPA2`		# 这是协议类型，可默认为3
 ```
 
-修改main.py的源码为：
+### main.py
+
+配合模块使用需要修改main.py的源码为：
 
 ```python
-import wifimgr # 这个模块名称务必要与上述WIFIManager模块文件名一致
+import wifimgr # 这个模块名称务必要与上述WiFiManager模块文件名一致
 
 wlan = wifimgr.get_connection()
 if wlan is None:
@@ -473,22 +471,22 @@ if wlan is None:
 print("ESP OK")
 ```
 
-**这个模块名称务必要与上述WIFIManager模块文件名一致** 。
+**这个import的模块名称务必要与上述WiFiManager模块文件名一致** 。
 
-## WIFIManger模块测试
+## WiFi Manger模块测试
 
-通过第四回中介绍的方式，将main.py和wifimgr.py烧录至ESP8266的Flash中，并进行**复位**操作，就可以在REPL中看到相应的串口信息提示：
+通过[系列文章第四回](https://github.com/LJacki/MicroPython_ESP8266/blob/main/%E4%B8%93%E6%A0%8F%E7%B3%BB%E5%88%97%E6%96%87%E7%AB%A0/MicroPython_ESP8266_IoT%E2%80%94%E2%80%94%E7%AC%AC%E5%9B%9B%E5%9B%9E%20%E5%88%9D%E5%85%A5%E8%81%94%E7%BD%91%EF%BC%88%E6%8E%A5%E5%85%A5%E4%BA%86%E8%B4%9D%E5%A3%B3%E7%89%A9%E8%81%94%EF%BC%89.md)中介绍的方式，将main.py和wifimgr.py烧录至ESP8266的Flash中，并进行**复位**操作，就可以在REPL中看到相应的串口信息提示：
 
 ```bash
 Connect to WiFi ssid WifiManager, default password: tayfunulu and access the ESP via your favourite web browser at 192.168.4.1.
 Listening on:('0.0.0', 80)
 ```
 
-按照上述提示，使用手机或者有WIFI的电脑，接入Access Point：WifiManager，密码：tayfunulu（如果修改过，请输入自己修改后的密码）：
+按照上述提示，使用手机或者有WiFi的电脑，接入Access Point：WifiManager，密码：tayfunulu（如果修改过，请输入自己修改后的密码）：
 
 ![Connect to WiFiManager Network ESP32 MicroPython](https://i1.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/connect-to-wifimanager-network.png?resize=375%2C475&quality=100&strip=all&ssl=1)
 
-当连接WiFiManager网络辰宫后，在浏览器地址栏输入IP`192.268.4.1`，就会得到如下网页：
+当连接WiFiManager网络成功后，在浏览器地址栏输入IP`192.268.4.1`，就会返回得到如下网页：
 
 ![Selecting Wi-Fi Network - WiFiManager MicroPython ESP32](https://i1.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/selecting-wi-fi-network-wifimanager.png?resize=750%2C525&quality=100&strip=all&ssl=1)
 
@@ -500,7 +498,7 @@ Listening on:('0.0.0', 80)
 
 ![ESP32 Station IP Address - WiFiManager MicroPython](https://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2019/11/wifi-manager-esp32-station-ip.png?resize=707%2C221&quality=100&strip=all&ssl=1)
 
-显示已经接入WIFI，以及相应的IP，掩码，网关等；
+显示已经接入WiFi，以及相应的IP，掩码，网关等；
 
 最主要的是，在REPL中显示：
 
@@ -510,20 +508,16 @@ ESP OK
 
 这就说明，在main.py中，已经运行到了最后一句。也就是说已经成功完成了配置WiFi的操作，如果后续有什么功能，就可以继续下去。
 
+## 结束语
 
+通过Web配置WIFI肯定不是唯一的方法。相对于再源码里面修改WIFI的配置信息来说，这样显得更加人性化，毕竟不是每个人都喜欢捣鼓这些玩意儿。
 
+笔者对HTML不熟悉，有兴趣页面应该可以做的更好看点。
 
+还有，切勿拿来主义，只有学习的态度是不能够的，更重要的是真的去学习。
 
+## 参考连接
 
+1. https://randomnerdtutorials.com/micropython-wi-fi-manager-esp32-esp8266/
+2. https://github.com/tayfunulu/WiFiManager
 
-
-
-
-
-
-
-
-
-参考连接：
-
-https://randomnerdtutorials.com/micropython-wi-fi-manager-esp32-esp8266/

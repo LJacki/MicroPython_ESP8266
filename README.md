@@ -14,6 +14,8 @@
 
 [MicroPython_ESP8266_IoT——第四回 初入联网（接入了贝壳物联）.md](https://github.com/LJacki/MicroPython_ESP8266/blob/main/专栏系列文章/MicroPython_ESP8266_IoT——第四回 初入联网（接入了贝壳物联）.md)
 
+[MicroPython_ESP8266_IoT——第五回 网页配置（局域网连接WIFI）.md]() 
+
 ## 新的发现
 
 整理资料，做WOL；
