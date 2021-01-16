@@ -36,7 +36,7 @@ Mac用户点击`Preferences`，Windows用户点击`Setting`。
 
 再点击大大的`Restart PyCharm`重启软件来生效。
 
-![img](https://cdn.singtown.com/2018/04/QQ20180410-4.jpg)
+![img](https://gitee.com/sharewow/pic_repo/raw/master/img/QQ20180410-4.jpg)
 
 同样，在`Preference`中的`Language & Frameworks`里面的 MciroPython 点击，勾选`Enalbe MicroPython support`，并且选择相应的设备，图片中选择的是Pyboard，这里要下拉选中`ESP8266`。
 
@@ -82,7 +82,7 @@ print("hello micropython in PyCharm")
 
 ![img](https://gitee.com/sharewow/pic_repo/raw/master/img/QQ20180410-10.jpeg)
 
-<img src="https://cdn.singtown.com/2018/04/QQ20180410-10.jpg" alt="img" style="zoom:50%;" />
+<img src="https://gitee.com/sharewow/pic_repo/raw/master/img/QQ20180410-10.jpg" alt="img" style="zoom:50%;" />
 
 填写`Name`和`Path`，`Path`就是项目的目录，点击OK。
 
