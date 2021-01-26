@@ -1,30 +1,25 @@
-close all;
+% close all;
 clear;
 
-j=0:1:10;
-i=0:1:30;
+j=0:1:64;
+i=0:1:128;
 [x,y] = meshgrid(i,j);
-plot(x,y,'b')
+set(gca, 'color', [0 0 0]);
+plot(x,y,'w')
 hold on
-plot(x',y','b')
+plot(x',y','w')
 
+ for i = 0:1:128
+     for j = 0:1:64
+         draw_pixel(i, j, 'g');
+         pause(0.001)
+     end
+ end
 
-m = [0 1 1 0 0]; %逆时针旋转一周期的5个点的横坐标
-n = [0 0 1 1 0]; %逆时针旋转一周期的5个点的纵坐标
-fill(m, n, 'r');
-
-pause(0.5)
-
-m = [1 2 2 1 ];
-n = [1 1 2 2 ];
-fill(m, n, 'g');
-
-pause(0.5)
-
-m = [2 3 3 2 ];
-n = [2 2 3 3 ];
-fill(m, n, 'b');
-
-pause(0.5);
-
-function [a, b, c, d, e] = pixel(axis)
+ for i = 42:1:80
+     for j = 0:1:15
+         draw_pixel(i, j, 'r');
+         pause(0.001)
+     end
+ end
+ 
